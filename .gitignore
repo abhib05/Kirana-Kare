@@ -1,0 +1,29 @@
+# secrets
+.env
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+*.egg-info/
+
+# node
+node_modules/
+frontend/dist/
+
+# eval audio (never commit recordings)
+eval/recordings/*
+!eval/recordings/.gitkeep
+
+# os / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.tsbuildinfo
