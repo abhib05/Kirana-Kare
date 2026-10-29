@@ -6,6 +6,7 @@ Nothing reaches a basket or the ledger unless it parses into `ExtractedTurn` *an
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal
@@ -38,11 +39,14 @@ class ExtractionRejected(ValueError):
 class ExtractedItem(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    raw_text: str = Field(max_length=200)
-    product_hint: str = Field(min_length=1, max_length=100)
-    qty: Decimal
-    unit: Unit | None = None
-    spoken_price_paise: int | None = None  # price per `unit`, if the speaker stated one
+    raw_text: str = Field(max_length=200, description="Words that described the item")
+    product_hint: str = Field(min_length=1, max_length=100,
+                              description="Short normalized product name, e.g. 'atta'")
+    qty: Decimal = Field(description="Quantity, e.g. 2, 0.5 for aadha, 1.5 for dedh")
+    unit: Unit | None = Field(default=None, description="Unit if said, else null")
+    spoken_price_paise: int | None = Field(
+        default=None,
+        description="Only if a price was said: price PER UNIT in paise (rupees x 100); else null")
 
     @field_validator("product_hint")
     @classmethod
@@ -56,12 +60,21 @@ class ExtractedItem(BaseModel):
 class ExtractedTurn(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    is_transactional: bool
-    items: list[ExtractedItem] = Field(default_factory=list, max_length=30)
-    payment_mode: PaymentMode = "unknown"
-    customer_name: str | None = Field(default=None, max_length=100)
-    action: Action = "none"
-    udhaar_payment_paise: int | None = None
+    is_transactional: bool = Field(description="False for chit-chat and price questions")
+    items: list[ExtractedItem] = Field(default_factory=list, max_length=30,
+                                       description="Items added or removed in this turn")
+    payment_mode: PaymentMode = Field(default="unknown",
+                                      description="How this sale is being paid, if said")
+    customer_name: str | None = Field(
+        default=None, max_length=100,
+        description="Customer named in this turn as spoken, e.g. 'Ramesh bhaiya'; else null")
+    action: Action = Field(
+        default="none",
+        description="add_items when buying, remove_items when dropping an item, close_basket "
+                    "when wrapping up or stating payment, udhaar_payment when repaying credit")
+    udhaar_payment_paise: int | None = Field(
+        default=None,
+        description="Credit repayment in paise = rupees x 100 (Rs 500 -> 50000); else null")
 
 
 @dataclass(frozen=True)
@@ -101,6 +114,40 @@ def check_business_rules(turn: ExtractedTurn) -> None:
             raise ExtractionRejected(f"invalid udhaar payment amount {amt!r}")
     if turn.action in ("add_items", "remove_items") and not turn.items:
         raise ExtractionRejected(f"{turn.action} without items")
+
+
+_SPOKEN_NUMBER = re.compile(r"\d[\d,]*(?:\.\d+)?")
+
+
+def spoken_numbers(text: str) -> set[Decimal]:
+    return {Decimal(m.group().replace(",", "")) for m in _SPOKEN_NUMBER.finditer(text)}
+
+
+def check_amounts_grounded(text: str, turn: ExtractedTurn) -> None:
+    """Every rupee amount must match a number that was actually said (±₹1 for rounding).
+
+    Catches unit slips such as "500 rupaye" -> 5,000,000 paise. Only applies when the turn
+    contains digits; amounts spoken as words ("paanch sau") are left to the other checks.
+    """
+    said = spoken_numbers(text)
+    if not said:
+        return
+
+    def grounded(*rupee_values: Decimal) -> bool:
+        return any(abs(v - n) <= 1 for v in rupee_values for n in said)
+
+    if turn.udhaar_payment_paise is not None and not grounded(
+        Decimal(turn.udhaar_payment_paise) / 100
+    ):
+        raise ExtractionRejected(
+            f"udhaar payment {turn.udhaar_payment_paise}p matches no number in the turn")
+    for item in turn.items:
+        if item.spoken_price_paise is None:
+            continue
+        unit_rupees = Decimal(item.spoken_price_paise) / 100
+        if not grounded(unit_rupees, unit_rupees * item.qty):
+            raise ExtractionRejected(
+                f"price for {item.product_hint!r} matches no number in the turn")
 
 
 def check_price_band(hint: str, implied_unit_price: Decimal, catalog_price_paise: int) -> None:

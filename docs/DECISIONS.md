@@ -53,6 +53,12 @@ implements the same `Extractor` interface. It is also the baseline the LLM is me
 An early hook list was replaced by a direct call: there is exactly one consumer, and an
 explicit call makes it obvious that stock moves in the same transaction as the ledger.
 
+## D12. LLM schema without defaults, and amounts grounded in speech
+The Pydantic schema keeps defaults (so parsing tolerates omissions), but the schema sent to
+the model has every field required and no defaults: with defaults present, `muse-spark-1.3`
+echoed them instead of extracting. Independently, any money amount must match a number that
+was spoken in the turn; a model that mis-scales rupees to paise is rejected, not believed.
+
 ## D11. In-process event bus
 One backend process serves the MVP, so `/ws/events` is fed by an in-process bus. Multiple
 replicas would need Redis pub/sub instead.

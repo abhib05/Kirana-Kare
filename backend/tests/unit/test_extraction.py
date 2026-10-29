@@ -9,11 +9,19 @@ import pytest
 
 from app.db.seed import PRODUCTS
 from app.extraction.catalog_match import CatalogEntry, convert_qty, match_product
-from app.extraction.extractor import LLMExtractor, RuleExtractor, get_extractor, load_prompt
+from app.extraction.extractor import (
+    LLMExtractor,
+    RuleExtractor,
+    get_extractor,
+    llm_json_schema,
+    load_prompt,
+)
 from app.extraction.schemas import (
+    ExtractedItem,
     ExtractedTurn,
     ExtractionRejected,
     Turn,
+    check_amounts_grounded,
     check_business_rules,
     check_price_band,
     parse_llm_output,
@@ -75,6 +83,46 @@ def test_llm_valid_output():
 def test_llm_invalid_output_rejected(content):
     with pytest.raises(ExtractionRejected):
         LLMExtractor(FakeLLM(content), "m").extract(TURN, [], CATALOG)
+
+
+def test_llm_100x_repayment_slip_is_rejected():
+    # Real muse-spark output seen during the eval: Rs 500 returned as 5,000,000 paise.
+    turn = Turn("t", "Suresh anna 500 rupaye jama kar rahe hain", TURN.ts)
+    slip = {**VALID, "items": [], "action": "udhaar_payment", "payment_mode": "cash",
+            "customer_name": "Suresh anna", "udhaar_payment_paise": 5_000_000}
+    with pytest.raises(ExtractionRejected, match="matches no number"):
+        LLMExtractor(FakeLLM(json.dumps(slip)), "m").extract(turn, [], CATALOG)
+    ok = {**slip, "udhaar_payment_paise": 50_000}
+    assert LLMExtractor(FakeLLM(json.dumps(ok)), "m").extract(turn, [], CATALOG) \
+        .udhaar_payment_paise == 50_000
+
+
+@pytest.mark.parametrize(
+    ("text", "price", "qty", "ok"),
+    [("do kilo atta 90 rupaye", 4500, "2", True),   # 90 is the line total
+     ("atta 45 rupaye kilo", 4500, "2", True),       # 45 is the unit price
+     ("do kilo atta 90 rupaye", 450000, "2", False),  # 100x slip
+     ("do kilo atta nabbe rupaye", 4500, "2", True),  # words only: not checkable here
+     ("1,250 ka saamaan", 125000, "1", True)],
+)
+def test_check_amounts_grounded_prices(text, price, qty, ok):
+    turn = ExtractedTurn(is_transactional=True, action="add_items", items=[
+        ExtractedItem(raw_text=text, product_hint="atta", qty=Decimal(qty),
+                      spoken_price_paise=price)])
+    if ok:
+        check_amounts_grounded(text, turn)
+    else:
+        with pytest.raises(ExtractionRejected):
+            check_amounts_grounded(text, turn)
+
+
+def test_llm_schema_requires_every_field_without_defaults():
+    schema = llm_json_schema()
+    assert set(schema["required"]) == set(schema["properties"])
+    item = schema["$defs"]["ExtractedItem"]
+    assert set(item["required"]) == set(item["properties"])
+    assert "default" not in json.dumps(schema)
+    assert "rupees x 100" in schema["properties"]["udhaar_payment_paise"]["description"]
 
 
 def test_llm_api_error_rejected():

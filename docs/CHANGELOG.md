@@ -1,5 +1,11 @@
 # Changelog
 
+## Real-API checks (after the key was added)
+- Muse Voice Transcribe: real handshake, 1 s of streamed audio, `endStream`, close 1000. Observed that a `speaker` event can arrive after the first partial; still within the turn, so labels attach correctly. Silence can yield a `speechComplete` with an empty transcript, which the relay already drops.
+- LLM extraction eval, first run: items 100%, but customers 0% and `action` mostly `"none"`, because the model echoed the schema's defaults. It also turned "500 rupaye" into 5,000,000 paise, which the ₹1 lakh bound would have let into the ledger.
+- Fixes: `llm_json_schema()` sends every field as required with descriptions and no defaults; new `check_amounts_grounded()` rejects any repayment or price that matches no number spoken in the turn (±₹1), in both extractor backends. 7 regression tests, including the exact 100× output.
+- LLM eval after the fix (40 typed turns): items P/R 100%/100%, qty 100%, payment mode 97.5%, customer 100%, chit-chat vs sale 97.5%. The one miss ("venkat anna ka hisaab baad mein") is left as is rather than tuning the prompt to the test set.
+
 ## Phase 9 — Polish
 - README: problem, eval numbers, 5-minute quick start, demo script, architecture, design choices, tests, privacy, limitations, future work.
 - Clean-clone check: `git clone` → `cp .env.example .env` → `docker compose up --build` → typed sale → UPI awaiting with ref → alert → ledger + stock update, all through the frontend proxy. It found a first-run bug: `.env.example` had inline comments, which Compose reads as part of the value, so `MODEL_API_KEY` became the comment text and every turn was rejected with an LLM auth error. Comments now sit on their own lines.

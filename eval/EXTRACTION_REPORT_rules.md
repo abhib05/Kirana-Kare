@@ -1,6 +1,6 @@
 # Extraction eval — rule-based baseline (rules-v1)
 
-Generated 2026-10-29 13:49 UTC · 40 hand-labelled code-mixed turns · input: typed transcripts.
+Generated 2026-10-29 17:47 UTC · 40 hand-labelled code-mixed turns · input: typed transcripts.
 
 | Metric | Value |
 |---|---|

@@ -4,7 +4,8 @@
 - `RuleExtractor`: deterministic keyword/number parser (rules.py). Used in CI, in the eval
   harness as a baseline, and for demos without an API key.
 
-Both return output that has already passed Pydantic parsing and `check_business_rules`.
+Both return output that has already passed Pydantic parsing, `check_business_rules`, and
+`check_amounts_grounded` (every rupee amount must match a number actually spoken).
 """
 
 from __future__ import annotations
@@ -22,6 +23,7 @@ from app.extraction.schemas import (
     ExtractedTurn,
     ExtractionRejected,
     Turn,
+    check_amounts_grounded,
     check_business_rules,
     parse_llm_output,
 )
@@ -43,6 +45,31 @@ class Extractor(Protocol):
 @lru_cache
 def load_prompt(version: str = PROMPT_VERSION) -> str:
     return (PROMPT_DIR / f"{version}.txt").read_text(encoding="utf-8")
+
+
+@lru_cache
+def llm_json_schema() -> dict[str, Any]:
+    """ExtractedTurn's schema with every field required and defaults removed.
+
+    With defaults present the model tends to echo them (customer_name null, action "none")
+    instead of filling the field; a required field with a description gets filled. Nullable
+    fields stay nullable, so "nothing was said" is still expressible.
+    """
+    schema = ExtractedTurn.model_json_schema()
+
+    def walk(node: Any) -> None:
+        if isinstance(node, dict):
+            node.pop("default", None)
+            if "properties" in node:
+                node["required"] = list(node["properties"])
+            for v in node.values():
+                walk(v)
+        elif isinstance(node, list):
+            for v in node:
+                walk(v)
+
+    walk(schema)
+    return schema
 
 
 def _catalog_text(catalog: list[CatalogEntry]) -> str:
@@ -89,8 +116,7 @@ class LLMExtractor:
                 ],
                 response_format={
                     "type": "json_schema",
-                    "json_schema": {"name": "ExtractedTurn",
-                                    "schema": ExtractedTurn.model_json_schema()},
+                    "json_schema": {"name": "ExtractedTurn", "schema": llm_json_schema()},
                 },
             )
             content = resp.choices[0].message.content or ""
@@ -102,6 +128,7 @@ class LLMExtractor:
             raise ExtractionRejected("LLM returned non-JSON output", content) from exc
         result = parse_llm_output(data)
         check_business_rules(result)
+        check_amounts_grounded(turn.text, result)
         return result
 
 
@@ -112,6 +139,7 @@ class RuleExtractor:
                 catalog: list[CatalogEntry]) -> ExtractedTurn:
         result = extract_rules(turn.text, catalog)
         check_business_rules(result)
+        check_amounts_grounded(turn.text, result)
         return result
 
 

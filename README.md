@@ -35,10 +35,21 @@ to match). Those missed sales account for most of the wrong auto-matches. A dev-
 threshold (0.70) looked fine on dev but dropped to 98.9% precision on held-out, so the defaults
 stay.
 
-Extraction (40 hand-labelled code-mixed turns, typed rather than spoken; rule-based baseline):
-item precision 97.7%, recall 95.5%, payment mode 100%, customer 100%
-([eval/EXTRACTION_REPORT_rules.md](eval/EXTRACTION_REPORT_rules.md)). The LLM backend and
-the speech-to-items number need a `MODEL_API_KEY` and recorded clips; see *Limitations*.
+Extraction, on 40 hand-labelled code-mixed turns (typed transcripts, so this measures extraction
+without ASR):
+
+| | LLM (`muse-spark-1.3`) | Rule-based baseline |
+|---|---|---|
+| Item precision / recall | **100% / 100%** | 97.7% / 95.5% |
+| Quantity correct (found items) | 100% | 97.6% |
+| Payment mode | 97.5% | 100% |
+| Customer | 100% | 100% |
+| Chit-chat vs sale | 97.5% | 95.0% |
+
+The LLM's first run scored 0% on customers and turned "₹500" into ₹50,000. Both were fixed
+before the numbers above: the schema now requires every field, and any amount that matches no
+number actually spoken is rejected. Reports: [LLM](eval/EXTRACTION_REPORT_llm.md),
+[rules](eval/EXTRACTION_REPORT_rules.md). The speech-to-items number needs recorded clips.
 <!-- EVAL:END -->
 
 ## Quick start (about 5 minutes)
@@ -134,7 +145,7 @@ cd backend && uv sync && uv run pytest --cov=app
 cd frontend && npm ci && npx vitest run
 ```
 
-The backend suite has 227 tests: unit, Postgres integration, contract tests for every documented
+The backend suite has 234 tests: unit, Postgres integration, contract tests for every documented
 Muse event, and relay tests against a local fake Muse server (including a compressed
 rollover soak). Coverage is 94% overall and 98% on `reconciliation/`, `ledger/`, `alerts/` and
 `extraction/schemas.py`. CI runs ruff, mypy, pytest with a 90% coverage gate on that core, the
@@ -146,8 +157,8 @@ structured transactions are persisted. API keys live in the backend's `.env`; th
 never talks to Meta.
 
 ## Limitations
-- Live voice has been exercised against a local fake of the Muse protocol, not yet the real
-  service, so the hour-plus soak against the real API still has to be run.
+- The real Muse service has been checked for handshake, streaming and clean close (code 1000),
+  but the hour-plus soak with session rollover has only run against a local fake of the protocol.
 - Reconciliation numbers come from synthetic shop-days, not real payment-app traffic.
 - Extraction numbers above are on typed transcripts; the end-to-end (speech → items) number
   needs recorded clips (`eval/transcribe_clips.py`).

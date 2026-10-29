@@ -154,11 +154,18 @@ def main() -> None:
         "", "## Caveats", "",
         "- These are typed transcripts, not ASR output: they measure extraction alone. The "
         "end-to-end (speech → items) number needs recorded clips (`eval/transcribe_clips.py`).",
-        "- The 40 turns were written by the same author as the rule extractor, so the rules "
-        "baseline is optimistic. One rules bug (an honorific captured as the customer name in "
-        "\"irfan bhai ke khate mein\") was found by this eval and fixed before this run.",
-        "- Remaining rules misses are by design of exact alias matching: ASR-style misspellings "
-        "(\"chini\", \"magi\") and price questions (\"kitne ka hai atta?\") read as purchases.",
+        *(["- The 40 turns were written by the same author as the rule extractor, so the rules "
+           "baseline is optimistic. One rules bug (an honorific captured as the customer name "
+           "in \"irfan bhai ke khate mein\") was found by this eval and fixed before this run.",
+           "- Remaining rules misses are by design of exact alias matching: ASR-style "
+           "misspellings (\"chini\", \"magi\") and price questions (\"kitne ka hai atta?\") "
+           "read as purchases."] if args.backend == "rules" else
+          ["- The first LLM run scored 0% on customers: with schema defaults present the model "
+           "echoed `customer_name: null` and `action: \"none\"`. It also returned ₹500 as "
+           "5,000,000 paise (100x). Fixed before this run by sending a schema with every field "
+           "required and described, and by rejecting any amount that matches no number actually "
+           "spoken (`check_amounts_grounded`). The prompt itself was not tuned to these turns.",
+           "- 40 turns is a small set: one turn is 2.5 points."]),
         "", "## Turns with at least one error", "",
         "| id | text | predicted items | mode | customer |", "|---|---|---|---|---|",
         *[f"| {r['id']} | {r.get('text', '')} | {r['pred_items']} | {r.get('mode')} | "
