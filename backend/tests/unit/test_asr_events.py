@@ -1,5 +1,7 @@
 """Contract tests: the documented Muse realtime event shapes parse into typed models."""
 
+import pytest
+
 from app.asr.events import (
     AudioProgress,
     ErrorEvent,
@@ -13,7 +15,7 @@ from app.asr.events import (
     handshake,
     parse_event,
 )
-from app.asr.relay import is_calibration_phrase
+from app.asr.relay import is_calibration_phrase, split_calibration
 
 
 def test_documented_shapes():
@@ -61,3 +63,18 @@ def test_calibration_phrase():
     assert is_calibration_phrase("Kirana Kare shuru karo")
     assert is_calibration_phrase("haan, kirana care shuru karo")
     assert not is_calibration_phrase("do kilo atta dena")
+
+
+@pytest.mark.parametrize(
+    ("text", "rest"),
+    [
+        # Verbatim real Muse output: phrase and first sale merged into one turn (turnId 0).
+        (" Kiranakir shurukaro do kilo atta or ek packet doodh business ji pay card hun ",
+         "do kilo atta or ek packet doodh business ji pay card hun"),
+        ("Kirana Kare shuru karo", ""),
+        ("Kirana Kare shuru karo. Ek maggi.", "Ek maggi"),
+        ("do kilo atta dena", None),
+    ],
+)
+def test_split_calibration(text, rest):
+    assert split_calibration(text) == rest

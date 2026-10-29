@@ -165,7 +165,9 @@ def build_scheduler(settings: Settings | None = None) -> BackgroundScheduler:
         with get_session_factory()() as db:
             BasketEngine(db, get_redis(), s.demo_shop_id, RuleExtractor(), s).sweep_idle()
 
-    sched = BackgroundScheduler(timezone="Asia/Kolkata")
+    # Docker Desktop's VM clock can jump a few seconds; don't warn about "missed" runs then.
+    sched = BackgroundScheduler(timezone="Asia/Kolkata",
+                                job_defaults={"misfire_grace_time": 60})
     sched.add_job(reminders_job, CronTrigger(hour=s.reminder_hour_ist, minute=0),
                   id="udhaar_reminders", coalesce=True, max_instances=1)
     sched.add_job(idle_sweep_job, "interval", seconds=60, id="basket_idle_sweep",

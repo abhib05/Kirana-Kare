@@ -12,8 +12,10 @@ One `RelaySession` per listening browser. It owns one active `UpstreamSession` a
   session is opened and audio switches to it; the old one gets `endStream` and is drained
   until it closes, so turns in flight on it are not lost.
 - Unexpected closes reconnect with exponential backoff (longer for 1013 rate limits).
-- Merchant calibration: the first turn on each session that sounds like the calibration
-  phrase marks that speaker label as the merchant for that session only.
+- Merchant calibration: the first turn on each session that contains the calibration
+  phrase marks that speaker label as the merchant for that session only. If Muse merged
+  the phrase with what followed into one turn, the rest of the turn is still processed.
+- Turn ids from the real service start at 0.
 """
 
 from __future__ import annotations
@@ -22,6 +24,7 @@ import asyncio
 import contextlib
 import json
 import logging
+import re
 import time
 import uuid
 from collections.abc import Awaitable, Callable
@@ -102,6 +105,20 @@ class RelayConfig:
 def is_calibration_phrase(text: str) -> bool:
     return fuzz.partial_ratio(utils.default_process(text), CALIBRATION_PHRASE) >= \
         CALIBRATION_MIN_SCORE
+
+
+def split_calibration(text: str) -> str | None:
+    """None if the turn doesn't contain the calibration phrase; otherwise the rest of the
+    turn with the phrase cut out. Muse often merges the phrase and the first sale into one
+    turn ("kirana kare shuru karo do kilo atta…"), and that sale must not be dropped."""
+    if not is_calibration_phrase(text):
+        return None
+    lowered = text.lower()
+    span = fuzz.partial_ratio_alignment(CALIBRATION_PHRASE, lowered)
+    if span is None:
+        return ""
+    rest = f"{text[:span.dest_start]} {text[span.dest_end:]}"
+    return " ".join(rest.split()).strip(" .,!?;:-")
 
 
 @dataclass
@@ -331,11 +348,15 @@ class RelaySession:
         text = ev.transcript.strip()
         if not text:
             return
-        if s.merchant_label is None and label is not None and is_calibration_phrase(text):
-            s.merchant_label = label
-            await self._status("listening", calibrated=True, merchant_label=label,
-                               session_id=s.session_id)
-            return
+        if s.merchant_label is None and label is not None:
+            rest = split_calibration(text)
+            if rest is not None:
+                s.merchant_label = label
+                await self._status("listening", calibrated=True, merchant_label=label,
+                                   session_id=s.session_id)
+                if len(re.findall(r"\w+", rest)) < 2:
+                    return  # the turn was just the phrase (plus a filler word at most)
+                text = rest
         await self._turns.put(Turn(
             turn_id=f"{s.session_id}:{ev.turn_id}", text=text, ts=datetime.now(UTC),
             speaker=label,

@@ -36,6 +36,7 @@ class FakeMuse:
     session is the calibration phrase from speaker B (the merchant)."""
 
     reject_auth: bool = False
+    merge_calibration: bool = False  # real Muse often merges the phrase with the next words
     abort_session_after_bytes: dict[int, tuple[int, int]] = field(default_factory=dict)
     handshakes: list[dict] = field(default_factory=list)
     sessions: list[dict] = field(default_factory=list)
@@ -55,8 +56,8 @@ class FakeMuse:
         self.sessions.append(state)
 
         async def emit_turn(text: str, label: str) -> None:
+            t = state["turns"]  # the real service numbers turns from 0
             state["turns"] += 1
-            t = state["turns"]
             await ws.send(json.dumps({"type": "speechStart", "turnId": t}))
             await ws.send(json.dumps({"type": "speaker", "label": label}))
             await ws.send(json.dumps({"type": "transcript", "transcript": text[:5],
@@ -78,7 +79,9 @@ class FakeMuse:
                         await ws.close(code)
                         return
                 while state["bytes"] >= TURN_EVERY_BYTES * (state["turns"] + 1):
-                    if state["turns"] == 0:
+                    if state["turns"] == 0 and self.merge_calibration:
+                        await emit_turn(f"{CALIBRATION_PHRASE} do kilo atta", "B")
+                    elif state["turns"] == 0:
                         await emit_turn(CALIBRATION_PHRASE, "B")
                     else:
                         await emit_turn(f"ek parle g turn {state['turns']}", "A")
@@ -153,6 +156,21 @@ async def test_handshake_turns_and_merchant_calibration(muse):
     assert any(m["type"] == "partial" for m in rec.messages)
     assert muse.sessions[0]["ended"] is True
     assert {"calibrating", "hearing", "listening", "offline"} <= set(rec.statuses())
+
+
+async def test_sale_merged_into_calibration_turn_is_not_dropped(muse):
+    muse.merge_calibration = True
+    rec = Recorder()
+    relay = RelaySession(cfg(muse.url), rec.handle, rec.notify)
+    await relay.start()
+    for _ in range(4):
+        await relay.feed(FRAME)
+    await asyncio.sleep(0.2)
+    await relay.stop()
+    assert relay.sessions[0].merchant_label == "B"
+    first = rec.turns[0]
+    assert first.text == "do kilo atta"
+    assert first.turn_id.endswith(":0") and first.is_merchant is True
 
 
 async def test_compressed_soak_rollover_loses_no_turns(muse):

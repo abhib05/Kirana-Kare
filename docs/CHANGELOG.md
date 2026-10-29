@@ -1,5 +1,12 @@
 # Changelog
 
+## Real-API voice check: calibration swallowed the first sale
+- Streamed synthesized speech ("Kirana Kare shuru karo. Do kilo atta, aur ek packet doodh. Bas, GPay karta hoon.") through `/ws/audio` via the frontend proxy to the real Muse service. Muse returned it as one turn (turn ids start at 0): `Kiranakir shurukaro do kilo atta or ek packet doodh business ji pay card hun`.
+- Bug: the relay treated any turn *containing* the calibration phrase as calibration and dropped it, so the sale in the same turn was lost. Now `split_calibration()` cuts the phrase out, sets the merchant label, and processes the rest when it has at least two words.
+- After the fix the same audio produced a basket awaiting UPI: ₹120, 2 kg atta + 1 packet milk (the LLM read "business ji pay" as GPay).
+- Tests: the verbatim real transcript as a unit case; the fake Muse server now numbers turns from 0 and can merge the phrase into the first sale.
+- APScheduler jobs get a 60 s misfire grace: Docker Desktop's VM clock jumps of 2–5 s were logging "missed" runs every minute.
+
 ## Real-API checks (after the key was added)
 - Muse Voice Transcribe: real handshake, 1 s of streamed audio, `endStream`, close 1000. Observed that a `speaker` event can arrive after the first partial; still within the turn, so labels attach correctly. Silence can yield a `speechComplete` with an empty transcript, which the relay already drops.
 - LLM extraction eval, first run: items 100%, but customers 0% and `action` mostly `"none"`, because the model echoed the schema's defaults. It also turned "500 rupaye" into 5,000,000 paise, which the ₹1 lakh bound would have let into the ledger.
