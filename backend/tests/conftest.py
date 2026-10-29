@@ -74,23 +74,30 @@ def db(session_factory: sessionmaker[Session]) -> Iterator[Session]:
 
 
 @pytest.fixture
-def client(session_factory: sessionmaker[Session]) -> Iterator[TestClient]:
+def redis_client() -> fakeredis.FakeRedis:
+    return fakeredis.FakeRedis(decode_responses=True)
+
+
+@pytest.fixture
+def client(
+    session_factory: sessionmaker[Session], redis_client: fakeredis.FakeRedis
+) -> Iterator[TestClient]:
+    from app.api.baskets import get_engine_deps
     from app.db.session import get_db
+    from app.extraction.extractor import RuleExtractor
     from app.main import app
+    from app.redis_client import get_redis
 
     def _get_db() -> Iterator[Session]:
         with session_factory() as session:
             yield session
 
     app.dependency_overrides[get_db] = _get_db
+    app.dependency_overrides[get_redis] = lambda: redis_client
+    app.dependency_overrides[get_engine_deps] = RuleExtractor
     with TestClient(app) as c:
         yield c
     app.dependency_overrides.clear()
-
-
-@pytest.fixture
-def redis_client() -> fakeredis.FakeRedis:
-    return fakeredis.FakeRedis(decode_responses=True)
 
 
 @pytest.fixture

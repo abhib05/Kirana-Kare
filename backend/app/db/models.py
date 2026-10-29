@@ -118,6 +118,8 @@ class Basket(Base):
     upi_ref_id: Mapped[str | None] = mapped_column(String(20), unique=True)
     opened_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     awaiting_since: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    last_activity_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    upi_link: Mapped[str | None] = mapped_column(Text)
     closed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     source_turn_ids: Mapped[list[str]] = mapped_column(ARRAY(Text), default=list)
     created_at: Mapped[datetime] = _created_at()

@@ -50,7 +50,7 @@ def _lock_alert(db: Session, shop_id: int, alert_id: int) -> UpiAlert:
 
 
 def load_baskets(db: Session, alert: UpiAlert, window_minutes: float) -> list[BasketView]:
-    ref_time = func.coalesce(Basket.awaiting_since, Basket.opened_at)
+    ref_time = func.coalesce(Basket.awaiting_since, Basket.last_activity_at, Basket.opened_at)
     window = timedelta(minutes=window_minutes)
     conds: list[ColumnElement[bool]] = [
         ref_time.between(alert.received_at - window, alert.received_at + window)
@@ -67,7 +67,8 @@ def load_baskets(db: Session, alert: UpiAlert, window_minutes: float) -> list[Ba
     ).scalars()
     return [
         BasketView(
-            id=b.id, total_paise=b.total_paise, ref_time=b.awaiting_since or b.opened_at,
+            id=b.id, total_paise=b.total_paise,
+            ref_time=b.awaiting_since or b.last_activity_at or b.opened_at,
             status=b.status, upi_ref_id=b.upi_ref_id, customer_id=b.customer_id,
         )
         for b in rows
