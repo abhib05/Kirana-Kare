@@ -22,6 +22,7 @@ from sqlalchemy.orm import Session, sessionmaker
 from app.config import get_settings
 from app.db.seed import seed
 
+os.environ.setdefault("SCHEDULER_ENABLED", "false")  # no background jobs during tests
 BACKEND_DIR = Path(__file__).resolve().parents[1]
 TEST_DATABASE_URL = os.environ.get(
     "TEST_DATABASE_URL", "postgresql+psycopg://kk:kk@localhost:5433/kirana_test"

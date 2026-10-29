@@ -6,6 +6,7 @@ import ConfirmQueue from "./pages/ConfirmQueue";
 import Inventory from "./pages/Inventory";
 import Listener from "./pages/Listener";
 import Live from "./pages/Live";
+import Restock from "./pages/Restock";
 import Summary from "./pages/Summary";
 import Udhaar from "./pages/Udhaar";
 
@@ -15,13 +16,14 @@ const TABS = [
   { id: "confirm", label: "Confirm" },
   { id: "udhaar", label: "Udhaar" },
   { id: "inventory", label: "Inventory" },
+  { id: "restock", label: "Restock" },
   { id: "summary", label: "Summary" },
 ] as const;
 type Tab = (typeof TABS)[number]["id"];
 
 const PAGES: Record<Tab, () => JSX.Element | null> = {
   live: Live, listener: Listener, confirm: ConfirmQueue, udhaar: Udhaar,
-  inventory: Inventory, summary: Summary,
+  inventory: Inventory, restock: Restock, summary: Summary,
 };
 
 function Shell() {

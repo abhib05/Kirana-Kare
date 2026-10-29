@@ -1,25 +1,22 @@
-"""Closing a basket: the one place a sale reaches the ledger.
+"""Closing a basket: the one place a sale reaches the ledger and the stock count.
 
 Called from the basket engine (cash / udhaar by voice), the reconciliation engine (UPI
 match) and the dashboard (manual close). Flushes only — the caller's transaction makes
-the status change, ledger posting and stock decrement atomic.
+the status change, ledger posting, stock decrement and restock draft atomic.
 """
 
 from __future__ import annotations
 
-from collections.abc import Callable
 from datetime import UTC, datetime
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.db.models import AuditLog, Basket, LedgerEntry
+from app.inventory.service import on_basket_closed
 from app.ledger import service as ledger
 
 SALE_ENTRY = {"cash": "sale_cash", "upi": "sale_upi", "udhaar": "sale_udhaar"}
-
-# Hooks run inside the close transaction (inventory decrement registers itself here).
-on_close_hooks: list[Callable[[Session, Basket], None]] = []
 
 
 class BasketCloseError(ValueError):
@@ -73,8 +70,7 @@ def close_basket(
     basket.status = "closed"
     basket.payment_mode = mode
     basket.closed_at = datetime.now(UTC)
-    for hook in on_close_hooks:
-        hook(db, basket)
+    on_basket_closed(db, basket)  # stock decrement + restock drafts, same transaction
     db.add(
         AuditLog(
             shop_id=basket.shop_id,

@@ -32,6 +32,10 @@ class Settings(BaseSettings):
     restock_multiplier: float = 2.0
 
     whatsapp_cloud_api_enabled: bool = False
+    whatsapp_token: str = ""
+    whatsapp_phone_number_id: str = ""
+    scheduler_enabled: bool = True
+    reminder_hour_ist: int = 10
     extractor_backend: str = Field(default="llm", pattern="^(llm|rules)$")
 
     @property
