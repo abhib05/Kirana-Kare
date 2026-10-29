@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 from app.api.deps import get_db, shop_id
 from app.baskets.closing import BasketCloseError
 from app.baskets.engine import BasketEngine, basket_to_dict
-from app.db.models import Basket, Product, Vendor
+from app.db.models import Basket, BasketItem, Product, Vendor
 from app.extraction.extractor import Extractor, get_extractor
 from app.extraction.schemas import Turn
 from app.redis_client import get_redis
@@ -114,6 +114,25 @@ def map_item(item_id: int, body: MapIn, eng: BasketEngine = Depends(engine)) -> 
     except BasketCloseError as exc:
         raise HTTPException(409, str(exc)) from exc
     return basket_to_dict(item.basket)
+
+
+@router.get("/basket-items/unmapped")
+def unmapped_items(db: Session = Depends(get_db),
+                   shop: int = Depends(shop_id)) -> list[dict[str, Any]]:
+    """Flagged or unmapped lines in baskets that can still be edited."""
+    rows = db.execute(
+        select(BasketItem, Basket.status)
+        .join(Basket, Basket.id == BasketItem.basket_id)
+        .where(BasketItem.shop_id == shop, BasketItem.flagged.is_(True),
+               Basket.status.in_(("open", "awaiting_payment")))
+        .order_by(BasketItem.id.desc())
+    ).all()
+    return [
+        {"id": i.id, "basket_id": str(i.basket_id), "basket_status": status,
+         "raw_text": i.raw_text, "product_hint": i.product_hint, "qty": str(i.qty.normalize()),
+         "unit": i.unit, "product_id": i.product_id, "match_score": i.match_score}
+        for i, status in rows
+    ]
 
 
 def product_to_dict(p: Product) -> dict[str, Any]:

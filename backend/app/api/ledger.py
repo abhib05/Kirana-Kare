@@ -1,11 +1,16 @@
-from fastapi import APIRouter, Depends, HTTPException
+from datetime import date, datetime, time, timedelta
+from typing import Any
+
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
-from sqlalchemy import select
+from sqlalchemy import func, select, text
 from sqlalchemy.orm import Session
 
+from app.alerts.sms_parser import IST
 from app.api.deps import get_db, shop_id
 from app.api.schemas import LedgerEntryOut
-from app.db.models import AuditLog, Customer
+from app.db.models import AuditLog, Basket, Customer, Match, UpiAlert
+from app.events import bus
 from app.ledger import service as ledger
 from app.udhaar.service import UdhaarError, record_payment
 
@@ -48,7 +53,48 @@ def udhaar_payment(
     except UdhaarError as exc:
         raise HTTPException(404, str(exc)) from exc
     db.commit()
-    return LedgerEntryOut.model_validate(entry)
+    out = LedgerEntryOut.model_validate(entry)
+    bus.publish("ledger_updated", out.model_dump(mode="json"))
+    return out
+
+
+@router.get("/summary")
+def summary(
+    day: date | None = Query(default=None, alias="date"), db: Session = Depends(get_db),
+    shop: int = Depends(shop_id),
+) -> dict[str, Any]:
+    """Cash / UPI / udhaar totals for one IST day, plus alert and basket counts."""
+    d = day or datetime.now(IST).date()
+    row = db.execute(
+        text("SELECT cash_paise, upi_paise, udhaar_paise, udhaar_collected_paise "
+             "FROM daily_summary WHERE shop_id = :s AND day = :d"), {"s": shop, "d": d}
+    ).mappings().first()
+    totals = dict(row) if row else {"cash_paise": 0, "upi_paise": 0, "udhaar_paise": 0,
+                                    "udhaar_collected_paise": 0}
+    start = datetime.combine(d, time.min, tzinfo=IST)
+    end = start + timedelta(days=1)
+    alerts = dict(db.execute(
+        select(UpiAlert.status, func.count()).where(
+            UpiAlert.shop_id == shop, UpiAlert.received_at >= start, UpiAlert.received_at < end
+        ).group_by(UpiAlert.status)
+    ).all())
+    auto = db.scalar(select(func.count()).select_from(Match).where(
+        Match.shop_id == shop, Match.decided_by == "auto", Match.decided_at >= start,
+        Match.decided_at < end))
+    baskets = dict(db.execute(
+        select(Basket.status, func.count()).where(Basket.shop_id == shop,
+                                                  Basket.opened_at >= start,
+                                                  Basket.opened_at < end)
+        .group_by(Basket.status)
+    ).all())
+    total_sales = totals["cash_paise"] + totals["upi_paise"] + totals["udhaar_paise"]
+    return {
+        "date": d.isoformat(), **totals, "total_sales_paise": total_sales,
+        "alerts": {"matched": alerts.get("matched", 0),
+                   "pending": alerts.get("pending_confirm", 0) + alerts.get("unmatched", 0),
+                   "ignored": alerts.get("ignored", 0), "auto_matched": auto or 0},
+        "baskets": baskets,
+    }
 
 
 @router.get("/ledger", response_model=list[LedgerEntryOut])
@@ -70,4 +116,6 @@ def reverse_entry(
     db.add(AuditLog(shop_id=shop, actor="merchant", action="ledger_reversal",
                     payload={"reversed_entry_id": entry_id, "entry_id": entry.id}))
     db.commit()
-    return LedgerEntryOut.model_validate(entry)
+    out = LedgerEntryOut.model_validate(entry)
+    bus.publish("ledger_updated", out.model_dump(mode="json"))
+    return out

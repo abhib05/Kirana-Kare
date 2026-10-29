@@ -1,5 +1,12 @@
 # Changelog
 
+## Phase 6 — Dashboard
+- `EventsProvider` keeps one `/ws/events` socket (exponential reconnect); `useLive()` refetches a page's data on every server event, so all open dashboards stay in sync.
+- Pages (hash-routed): **Live** (live transcript, open basket, awaiting-payment baskets with UPI QR codes, "Paid cash" / "Show UPI QR" / cancel, customer picker for udhaar baskets waiting on a name, simulate-payment buttons with and without ref, paste-an-SMS, recent sales), **Listener**, **Confirm** (each alert with top candidates, confidence bars, tier reasons, and one-tap *This sale* / *Udhaar repayment* / *Not a sale*; tab badge shows the queue size), **Udhaar** (balances, last payment, record a cash repayment), **Inventory** (stock with low-stock highlight, flagged/unmapped lines with one-tap mapping), **Summary** (cash/UPI/udhaar totals for any IST day, payment-mix bar, auto vs merchant-confirmed vs pending alerts).
+- Backend: `GET /api/summary?date=`, `GET /api/basket-items/unmapped`; manual udhaar payments and reversals now publish `ledger_updated`.
+- Verified in the browser against the compose stack: typed turns → basket awaiting UPI with QR → simulated alert auto-matched; two same-amount baskets + a no-ref alert → confirm queue (40% each, reasons shown) → one tap → queue empty; Summary reflects ₹221 UPI, 2 auto + 1 merchant-confirmed.
+- Tests: 198 backend (summary math incl. empty days, unmapped lifecycle).
+
 ## Phase 5 — Voice: browser capture + Muse relay
 - Frontend `src/audio/`: AudioWorklet capture (`worklet.ts`), streaming linear resampler to 24 kHz + Float32→Int16 + 80 ms little-endian framer (`pcm.ts`, Vitest-covered incl. 44.1 kHz drift), `MicStreamer` that keeps sending (silent) frames while muted. Listener page: Start/Stop, Mute, status pill (Listening / Hearing speech / Reconnecting / Offline / calibrating), live partial transcript, recent turns with resulting baskets, and a typed-turn box.
 - Backend `app/asr/events.py`: typed models for the documented events (`speechStart`, `transcript`, `speechEnd`, `speechComplete`, `speaker`, `audioProgress`, `error`, handshake ack); unknown or malformed events become `UnknownEvent` instead of failing.
