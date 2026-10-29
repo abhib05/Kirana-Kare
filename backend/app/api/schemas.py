@@ -20,7 +20,7 @@ class AlertOut(BaseModel):
     received_at: datetime
     source: str
     status: str
-    candidates: list[dict[str, Any]] | None = None
+    candidates: dict[str, Any] | None = None
 
 
 class IngestResult(BaseModel):

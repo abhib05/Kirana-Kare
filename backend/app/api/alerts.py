@@ -6,6 +6,7 @@ from app.alerts.ingest import AlertIn, alert_from_sms, ingest_alert
 from app.alerts.sms_parser import SmsParseError, parse_sms
 from app.api.deps import get_db, shop_id
 from app.api.schemas import AlertOut, IngestResult
+from app.reconciliation.engine import reconcile_alert
 
 router = APIRouter(prefix="/api/alerts", tags=["alerts"])
 
@@ -19,7 +20,11 @@ def _ingest(db: Session, shop: int, alert: AlertIn) -> IngestResult:
         row, created = ingest_alert(db, shop, alert)
     except ValueError as exc:
         raise HTTPException(409, str(exc)) from exc
-    return IngestResult(alert=AlertOut.model_validate(row), duplicate=not created)
+    if created:  # every new alert goes straight to the reconciliation engine
+        reconcile_alert(db, shop, row.id)
+        db.refresh(row)
+    return IngestResult(alert=AlertOut.model_validate(row), duplicate=not created,
+                        decision=row.candidates)
 
 
 @router.post("", response_model=IngestResult)

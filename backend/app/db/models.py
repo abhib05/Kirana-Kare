@@ -169,8 +169,8 @@ class UpiAlert(Base):
     raw_text: Mapped[str | None] = mapped_column(Text)
     source: Mapped[str] = mapped_column(String(12))
     status: Mapped[str] = mapped_column(String(20), default="unmatched")
-    # Scored candidates from the last reconciliation pass (for the confirm queue).
-    candidates: Mapped[list[dict[str, Any]] | None] = mapped_column(JSONB)
+    # The last reconciliation decision: outcome, scored top candidates, udhaar suggestion.
+    candidates: Mapped[dict[str, Any] | None] = mapped_column(JSONB)
     created_at: Mapped[datetime] = _created_at()
 
 

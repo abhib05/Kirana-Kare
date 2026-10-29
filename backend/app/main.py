@@ -2,11 +2,12 @@
 
 from fastapi import FastAPI
 
-from app.api import alerts, ledger
+from app.api import alerts, ledger, matches
 
 app = FastAPI(title="Kirana Kare", version="0.1.0")
 app.include_router(alerts.router)
 app.include_router(ledger.router)
+app.include_router(matches.router)
 
 
 @app.get("/healthz")
