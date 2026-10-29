@@ -14,6 +14,7 @@ from pathlib import Path
 
 import fakeredis
 import pytest
+from fastapi.testclient import TestClient
 from sqlalchemy import Engine, create_engine, text
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import Session, sessionmaker
@@ -70,6 +71,21 @@ def session_factory(engine: Engine) -> sessionmaker[Session]:
 def db(session_factory: sessionmaker[Session]) -> Iterator[Session]:
     with session_factory() as session:
         yield session
+
+
+@pytest.fixture
+def client(session_factory: sessionmaker[Session]) -> Iterator[TestClient]:
+    from app.db.session import get_db
+    from app.main import app
+
+    def _get_db() -> Iterator[Session]:
+        with session_factory() as session:
+            yield session
+
+    app.dependency_overrides[get_db] = _get_db
+    with TestClient(app) as c:
+        yield c
+    app.dependency_overrides.clear()
 
 
 @pytest.fixture
