@@ -54,8 +54,11 @@ REPAY_CUES = ("jama", "chukaya", "chuka diya", "wapas de", "repay", "udhaar ka p
 HONORIFIC_RE = re.compile(
     r"\b([a-z]{3,})\s+(bhaiya|bhai|ji|anna|amma|didi|aunty|garu|ben|sir|madam|akka)\b")
 KHATA_NAME_RE = re.compile(r"\b([a-z]{3,})\s+(?:ke|ka|ki)\s+(?:khate|khata|naam|account)")
+HONORIFIC_WORDS = {"bhaiya", "bhai", "ji", "anna", "amma", "didi", "aunty", "garu", "ben", "sir",
+                   "madam", "akka"}
 NAME_STOP = {"haan", "theek", "accha", "achha", "aap", "kya", "nahi", "bas", "aur", "dena",
-             "bhaiya", "thoda", "sab", "kal", "abhi", "please", "chalo", "hello", "namaste"}
+             "thoda", "sab", "kal", "abhi", "please", "chalo", "hello", "namaste",
+             *HONORIFIC_WORDS}
 
 
 def _normalize(text: str) -> str:

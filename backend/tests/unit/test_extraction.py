@@ -144,6 +144,7 @@ def test_convert_qty(qty, unit, product_unit, out, ok):
     [("bas, kitna hua? GPay karta hoon", "upi", "close_basket", None),
      ("Ramesh bhaiya ke khate mein likh do", "udhaar", "close_basket", "ramesh bhaiya"),
      ("Lakshmi ke khate mein", "udhaar", "close_basket", "lakshmi"),
+     ("irfan bhai ke khate mein", "udhaar", "close_basket", "irfan bhai"),
      ("ek kilo atta", "unknown", "add_items", None),
      ("haan ji theek hai", "unknown", "none", None)],
 )

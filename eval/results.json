@@ -1,0 +1,725 @@
+{
+  "meta": {
+    "generated": "2026-10-29 14:22 UTC",
+    "seed": 7,
+    "days": 40,
+    "dev_days": 20,
+    "test_days": 20
+  },
+  "dev_grid": [
+    {
+      "config": {
+        "threshold": 0.7,
+        "window_min": 5
+      },
+      "alerts": 687,
+      "sale_alerts": 609,
+      "auto_matched": 563,
+      "auto_match_rate": 81.95,
+      "auto_match_rate_sales": 91.95,
+      "auto_precision": 99.29,
+      "wrong_auto_matches": 4,
+      "wrong_auto_rate": 0.58,
+      "sent_to_merchant": 18.05,
+      "queue_top3_recall": 83.67,
+      "udhaar_suggestion_accuracy": 100.0,
+      "stray_auto_matched": 0,
+      "uncaptured_alerts": 51,
+      "uncaptured_auto_matched": 3,
+      "duplicates_sent": 46,
+      "duplicates_ignored_pct": 100.0,
+      "alerts_posted_more_than_once": 0,
+      "by_ref": {
+        "with_ref": {
+          "n": 237,
+          "auto_rate": 98.73,
+          "precision": 100.0,
+          "wrong_auto": 0
+        },
+        "without_ref": {
+          "n": 372,
+          "auto_rate": 87.63,
+          "precision": 99.69,
+          "wrong_auto": 1
+        }
+      },
+      "by_tier": {
+        "1": 224,
+        "2": 339
+      },
+      "seconds": 54.4
+    },
+    {
+      "config": {
+        "threshold": 0.7,
+        "window_min": 10
+      },
+      "alerts": 687,
+      "sale_alerts": 609,
+      "auto_matched": 566,
+      "auto_match_rate": 82.39,
+      "auto_match_rate_sales": 92.45,
+      "auto_precision": 99.29,
+      "wrong_auto_matches": 4,
+      "wrong_auto_rate": 0.58,
+      "sent_to_merchant": 17.61,
+      "queue_top3_recall": 93.48,
+      "udhaar_suggestion_accuracy": 100.0,
+      "stray_auto_matched": 0,
+      "uncaptured_alerts": 51,
+      "uncaptured_auto_matched": 3,
+      "duplicates_sent": 46,
+      "duplicates_ignored_pct": 100.0,
+      "alerts_posted_more_than_once": 0,
+      "by_ref": {
+        "with_ref": {
+          "n": 237,
+          "auto_rate": 98.73,
+          "precision": 100.0,
+          "wrong_auto": 0
+        },
+        "without_ref": {
+          "n": 372,
+          "auto_rate": 88.44,
+          "precision": 99.7,
+          "wrong_auto": 1
+        }
+      },
+      "by_tier": {
+        "1": 224,
+        "2": 342
+      },
+      "seconds": 57.3
+    },
+    {
+      "config": {
+        "threshold": 0.7,
+        "window_min": 15
+      },
+      "alerts": 687,
+      "sale_alerts": 609,
+      "auto_matched": 568,
+      "auto_match_rate": 82.68,
+      "auto_match_rate_sales": 92.78,
+      "auto_precision": 99.3,
+      "wrong_auto_matches": 4,
+      "wrong_auto_rate": 0.58,
+      "sent_to_merchant": 17.32,
+      "queue_top3_recall": 93.18,
+      "udhaar_suggestion_accuracy": 100.0,
+      "stray_auto_matched": 0,
+      "uncaptured_alerts": 51,
+      "uncaptured_auto_matched": 3,
+      "duplicates_sent": 46,
+      "duplicates_ignored_pct": 100.0,
+      "alerts_posted_more_than_once": 0,
+      "by_ref": {
+        "with_ref": {
+          "n": 237,
+          "auto_rate": 98.73,
+          "precision": 100.0,
+          "wrong_auto": 0
+        },
+        "without_ref": {
+          "n": 372,
+          "auto_rate": 88.98,
+          "precision": 99.7,
+          "wrong_auto": 1
+        }
+      },
+      "by_tier": {
+        "1": 224,
+        "2": 344
+      },
+      "seconds": 54.7
+    },
+    {
+      "config": {
+        "threshold": 0.75,
+        "window_min": 5
+      },
+      "alerts": 687,
+      "sale_alerts": 609,
+      "auto_matched": 558,
+      "auto_match_rate": 81.22,
+      "auto_match_rate_sales": 91.13,
+      "auto_precision": 99.28,
+      "wrong_auto_matches": 4,
+      "wrong_auto_rate": 0.58,
+      "sent_to_merchant": 18.78,
+      "queue_top3_recall": 85.19,
+      "udhaar_suggestion_accuracy": 100.0,
+      "stray_auto_matched": 0,
+      "uncaptured_alerts": 51,
+      "uncaptured_auto_matched": 3,
+      "duplicates_sent": 46,
+      "duplicates_ignored_pct": 100.0,
+      "alerts_posted_more_than_once": 0,
+      "by_ref": {
+        "with_ref": {
+          "n": 237,
+          "auto_rate": 98.73,
+          "precision": 100.0,
+          "wrong_auto": 0
+        },
+        "without_ref": {
+          "n": 372,
+          "auto_rate": 86.29,
+          "precision": 99.69,
+          "wrong_auto": 1
+        }
+      },
+      "by_tier": {
+        "1": 224,
+        "2": 334
+      },
+      "seconds": 52.9
+    },
+    {
+      "config": {
+        "threshold": 0.75,
+        "window_min": 10
+      },
+      "alerts": 687,
+      "sale_alerts": 609,
+      "auto_matched": 560,
+      "auto_match_rate": 81.51,
+      "auto_match_rate_sales": 91.46,
+      "auto_precision": 99.29,
+      "wrong_auto_matches": 4,
+      "wrong_auto_rate": 0.58,
+      "sent_to_merchant": 18.49,
+      "queue_top3_recall": 94.23,
+      "udhaar_suggestion_accuracy": 100.0,
+      "stray_auto_matched": 0,
+      "uncaptured_alerts": 51,
+      "uncaptured_auto_matched": 3,
+      "duplicates_sent": 46,
+      "duplicates_ignored_pct": 100.0,
+      "alerts_posted_more_than_once": 0,
+      "by_ref": {
+        "with_ref": {
+          "n": 237,
+          "auto_rate": 98.73,
+          "precision": 100.0,
+          "wrong_auto": 0
+        },
+        "without_ref": {
+          "n": 372,
+          "auto_rate": 86.83,
+          "precision": 99.69,
+          "wrong_auto": 1
+        }
+      },
+      "by_tier": {
+        "1": 224,
+        "2": 336
+      },
+      "seconds": 58.6
+    },
+    {
+      "config": {
+        "threshold": 0.75,
+        "window_min": 15
+      },
+      "alerts": 687,
+      "sale_alerts": 609,
+      "auto_matched": 562,
+      "auto_match_rate": 81.8,
+      "auto_match_rate_sales": 91.79,
+      "auto_precision": 99.29,
+      "wrong_auto_matches": 4,
+      "wrong_auto_rate": 0.58,
+      "sent_to_merchant": 18.2,
+      "queue_top3_recall": 94.0,
+      "udhaar_suggestion_accuracy": 100.0,
+      "stray_auto_matched": 0,
+      "uncaptured_alerts": 51,
+      "uncaptured_auto_matched": 3,
+      "duplicates_sent": 46,
+      "duplicates_ignored_pct": 100.0,
+      "alerts_posted_more_than_once": 0,
+      "by_ref": {
+        "with_ref": {
+          "n": 237,
+          "auto_rate": 98.73,
+          "precision": 100.0,
+          "wrong_auto": 0
+        },
+        "without_ref": {
+          "n": 372,
+          "auto_rate": 87.37,
+          "precision": 99.69,
+          "wrong_auto": 1
+        }
+      },
+      "by_tier": {
+        "1": 224,
+        "2": 338
+      },
+      "seconds": 54.8
+    },
+    {
+      "config": {
+        "threshold": 0.8,
+        "window_min": 5
+      },
+      "alerts": 687,
+      "sale_alerts": 609,
+      "auto_matched": 550,
+      "auto_match_rate": 80.06,
+      "auto_match_rate_sales": 89.98,
+      "auto_precision": 99.64,
+      "wrong_auto_matches": 2,
+      "wrong_auto_rate": 0.29,
+      "sent_to_merchant": 19.94,
+      "queue_top3_recall": 88.52,
+      "udhaar_suggestion_accuracy": 100.0,
+      "stray_auto_matched": 0,
+      "uncaptured_alerts": 51,
+      "uncaptured_auto_matched": 2,
+      "duplicates_sent": 46,
+      "duplicates_ignored_pct": 100.0,
+      "alerts_posted_more_than_once": 0,
+      "by_ref": {
+        "with_ref": {
+          "n": 237,
+          "auto_rate": 99.16,
+          "precision": 100.0,
+          "wrong_auto": 0
+        },
+        "without_ref": {
+          "n": 372,
+          "auto_rate": 84.14,
+          "precision": 100.0,
+          "wrong_auto": 0
+        }
+      },
+      "by_tier": {
+        "1": 225,
+        "2": 325
+      },
+      "seconds": 48.4
+    },
+    {
+      "config": {
+        "threshold": 0.8,
+        "window_min": 10
+      },
+      "alerts": 687,
+      "sale_alerts": 609,
+      "auto_matched": 552,
+      "auto_match_rate": 80.35,
+      "auto_match_rate_sales": 90.31,
+      "auto_precision": 99.64,
+      "wrong_auto_matches": 2,
+      "wrong_auto_rate": 0.29,
+      "sent_to_merchant": 19.65,
+      "queue_top3_recall": 96.61,
+      "udhaar_suggestion_accuracy": 100.0,
+      "stray_auto_matched": 0,
+      "uncaptured_alerts": 51,
+      "uncaptured_auto_matched": 2,
+      "duplicates_sent": 46,
+      "duplicates_ignored_pct": 100.0,
+      "alerts_posted_more_than_once": 0,
+      "by_ref": {
+        "with_ref": {
+          "n": 237,
+          "auto_rate": 99.16,
+          "precision": 100.0,
+          "wrong_auto": 0
+        },
+        "without_ref": {
+          "n": 372,
+          "auto_rate": 84.68,
+          "precision": 100.0,
+          "wrong_auto": 0
+        }
+      },
+      "by_tier": {
+        "1": 225,
+        "2": 327
+      },
+      "seconds": 51.4
+    },
+    {
+      "config": {
+        "threshold": 0.8,
+        "window_min": 15
+      },
+      "alerts": 687,
+      "sale_alerts": 609,
+      "auto_matched": 554,
+      "auto_match_rate": 80.64,
+      "auto_match_rate_sales": 90.64,
+      "auto_precision": 99.64,
+      "wrong_auto_matches": 2,
+      "wrong_auto_rate": 0.29,
+      "sent_to_merchant": 19.36,
+      "queue_top3_recall": 96.49,
+      "udhaar_suggestion_accuracy": 100.0,
+      "stray_auto_matched": 0,
+      "uncaptured_alerts": 51,
+      "uncaptured_auto_matched": 2,
+      "duplicates_sent": 46,
+      "duplicates_ignored_pct": 100.0,
+      "alerts_posted_more_than_once": 0,
+      "by_ref": {
+        "with_ref": {
+          "n": 237,
+          "auto_rate": 99.16,
+          "precision": 100.0,
+          "wrong_auto": 0
+        },
+        "without_ref": {
+          "n": 372,
+          "auto_rate": 85.22,
+          "precision": 100.0,
+          "wrong_auto": 0
+        }
+      },
+      "by_tier": {
+        "1": 225,
+        "2": 329
+      },
+      "seconds": 57.5
+    },
+    {
+      "config": {
+        "threshold": 0.85,
+        "window_min": 5
+      },
+      "alerts": 687,
+      "sale_alerts": 609,
+      "auto_matched": 528,
+      "auto_match_rate": 76.86,
+      "auto_match_rate_sales": 86.37,
+      "auto_precision": 99.62,
+      "wrong_auto_matches": 2,
+      "wrong_auto_rate": 0.29,
+      "sent_to_merchant": 23.14,
+      "queue_top3_recall": 91.57,
+      "udhaar_suggestion_accuracy": 100.0,
+      "stray_auto_matched": 0,
+      "uncaptured_alerts": 51,
+      "uncaptured_auto_matched": 2,
+      "duplicates_sent": 46,
+      "duplicates_ignored_pct": 100.0,
+      "alerts_posted_more_than_once": 0,
+      "by_ref": {
+        "with_ref": {
+          "n": 237,
+          "auto_rate": 99.16,
+          "precision": 100.0,
+          "wrong_auto": 0
+        },
+        "without_ref": {
+          "n": 372,
+          "auto_rate": 78.23,
+          "precision": 100.0,
+          "wrong_auto": 0
+        }
+      },
+      "by_tier": {
+        "1": 226,
+        "2": 302
+      },
+      "seconds": 51.9
+    },
+    {
+      "config": {
+        "threshold": 0.85,
+        "window_min": 10
+      },
+      "alerts": 687,
+      "sale_alerts": 609,
+      "auto_matched": 529,
+      "auto_match_rate": 77.0,
+      "auto_match_rate_sales": 86.54,
+      "auto_precision": 99.62,
+      "wrong_auto_matches": 2,
+      "wrong_auto_rate": 0.29,
+      "sent_to_merchant": 23.0,
+      "queue_top3_recall": 97.56,
+      "udhaar_suggestion_accuracy": 100.0,
+      "stray_auto_matched": 0,
+      "uncaptured_alerts": 51,
+      "uncaptured_auto_matched": 2,
+      "duplicates_sent": 46,
+      "duplicates_ignored_pct": 100.0,
+      "alerts_posted_more_than_once": 0,
+      "by_ref": {
+        "with_ref": {
+          "n": 237,
+          "auto_rate": 99.16,
+          "precision": 100.0,
+          "wrong_auto": 0
+        },
+        "without_ref": {
+          "n": 372,
+          "auto_rate": 78.49,
+          "precision": 100.0,
+          "wrong_auto": 0
+        }
+      },
+      "by_tier": {
+        "1": 226,
+        "2": 303
+      },
+      "seconds": 56.5
+    },
+    {
+      "config": {
+        "threshold": 0.85,
+        "window_min": 15
+      },
+      "alerts": 687,
+      "sale_alerts": 609,
+      "auto_matched": 531,
+      "auto_match_rate": 77.29,
+      "auto_match_rate_sales": 86.86,
+      "auto_precision": 99.62,
+      "wrong_auto_matches": 2,
+      "wrong_auto_rate": 0.29,
+      "sent_to_merchant": 22.71,
+      "queue_top3_recall": 97.5,
+      "udhaar_suggestion_accuracy": 100.0,
+      "stray_auto_matched": 0,
+      "uncaptured_alerts": 51,
+      "uncaptured_auto_matched": 2,
+      "duplicates_sent": 46,
+      "duplicates_ignored_pct": 100.0,
+      "alerts_posted_more_than_once": 0,
+      "by_ref": {
+        "with_ref": {
+          "n": 237,
+          "auto_rate": 99.16,
+          "precision": 100.0,
+          "wrong_auto": 0
+        },
+        "without_ref": {
+          "n": 372,
+          "auto_rate": 79.03,
+          "precision": 100.0,
+          "wrong_auto": 0
+        }
+      },
+      "by_tier": {
+        "1": 226,
+        "2": 305
+      },
+      "seconds": 52.6
+    },
+    {
+      "config": {
+        "threshold": 0.9,
+        "window_min": 5
+      },
+      "alerts": 687,
+      "sale_alerts": 609,
+      "auto_matched": 377,
+      "auto_match_rate": 54.88,
+      "auto_match_rate_sales": 61.9,
+      "auto_precision": 100.0,
+      "wrong_auto_matches": 0,
+      "wrong_auto_rate": 0.0,
+      "sent_to_merchant": 45.12,
+      "queue_top3_recall": 97.84,
+      "udhaar_suggestion_accuracy": 100.0,
+      "stray_auto_matched": 0,
+      "uncaptured_alerts": 51,
+      "uncaptured_auto_matched": 0,
+      "duplicates_sent": 46,
+      "duplicates_ignored_pct": 100.0,
+      "alerts_posted_more_than_once": 0,
+      "by_ref": {
+        "with_ref": {
+          "n": 237,
+          "auto_rate": 100.0,
+          "precision": 100.0,
+          "wrong_auto": 0
+        },
+        "without_ref": {
+          "n": 372,
+          "auto_rate": 37.63,
+          "precision": 100.0,
+          "wrong_auto": 0
+        }
+      },
+      "by_tier": {
+        "1": 233,
+        "2": 144
+      },
+      "seconds": 46.8
+    },
+    {
+      "config": {
+        "threshold": 0.9,
+        "window_min": 10
+      },
+      "alerts": 687,
+      "sale_alerts": 609,
+      "auto_matched": 379,
+      "auto_match_rate": 55.17,
+      "auto_match_rate_sales": 62.23,
+      "auto_precision": 100.0,
+      "wrong_auto_matches": 0,
+      "wrong_auto_rate": 0.0,
+      "sent_to_merchant": 44.83,
+      "queue_top3_recall": 100.0,
+      "udhaar_suggestion_accuracy": 100.0,
+      "stray_auto_matched": 0,
+      "uncaptured_alerts": 51,
+      "uncaptured_auto_matched": 0,
+      "duplicates_sent": 46,
+      "duplicates_ignored_pct": 100.0,
+      "alerts_posted_more_than_once": 0,
+      "by_ref": {
+        "with_ref": {
+          "n": 237,
+          "auto_rate": 100.0,
+          "precision": 100.0,
+          "wrong_auto": 0
+        },
+        "without_ref": {
+          "n": 372,
+          "auto_rate": 38.17,
+          "precision": 100.0,
+          "wrong_auto": 0
+        }
+      },
+      "by_tier": {
+        "1": 233,
+        "2": 146
+      },
+      "seconds": 52.3
+    },
+    {
+      "config": {
+        "threshold": 0.9,
+        "window_min": 15
+      },
+      "alerts": 687,
+      "sale_alerts": 609,
+      "auto_matched": 380,
+      "auto_match_rate": 55.31,
+      "auto_match_rate_sales": 62.4,
+      "auto_precision": 100.0,
+      "wrong_auto_matches": 0,
+      "wrong_auto_rate": 0.0,
+      "sent_to_merchant": 44.69,
+      "queue_top3_recall": 100.0,
+      "udhaar_suggestion_accuracy": 100.0,
+      "stray_auto_matched": 0,
+      "uncaptured_alerts": 51,
+      "uncaptured_auto_matched": 0,
+      "duplicates_sent": 46,
+      "duplicates_ignored_pct": 100.0,
+      "alerts_posted_more_than_once": 0,
+      "by_ref": {
+        "with_ref": {
+          "n": 237,
+          "auto_rate": 100.0,
+          "precision": 100.0,
+          "wrong_auto": 0
+        },
+        "without_ref": {
+          "n": 372,
+          "auto_rate": 38.44,
+          "precision": 100.0,
+          "wrong_auto": 0
+        }
+      },
+      "by_tier": {
+        "1": 233,
+        "2": 147
+      },
+      "seconds": 45.9
+    }
+  ],
+  "held_out_tuned": {
+    "config": {
+      "threshold": 0.7,
+      "window_min": 15
+    },
+    "alerts": 667,
+    "sale_alerts": 592,
+    "auto_matched": 546,
+    "auto_match_rate": 81.86,
+    "auto_match_rate_sales": 91.55,
+    "auto_precision": 98.9,
+    "wrong_auto_matches": 6,
+    "wrong_auto_rate": 0.9,
+    "sent_to_merchant": 18.14,
+    "queue_top3_recall": 92.0,
+    "udhaar_suggestion_accuracy": 100.0,
+    "stray_auto_matched": 0,
+    "uncaptured_alerts": 39,
+    "uncaptured_auto_matched": 4,
+    "duplicates_sent": 51,
+    "duplicates_ignored_pct": 100.0,
+    "alerts_posted_more_than_once": 0,
+    "by_ref": {
+      "with_ref": {
+        "n": 250,
+        "auto_rate": 99.6,
+        "precision": 99.6,
+        "wrong_auto": 1
+      },
+      "without_ref": {
+        "n": 342,
+        "auto_rate": 85.67,
+        "precision": 99.66,
+        "wrong_auto": 1
+      }
+    },
+    "by_tier": {
+      "2": 309,
+      "1": 237
+    },
+    "seconds": 42.9
+  },
+  "held_out_default": {
+    "config": {
+      "threshold": 0.8,
+      "window_min": 10
+    },
+    "alerts": 667,
+    "sale_alerts": 592,
+    "auto_matched": 538,
+    "auto_match_rate": 80.66,
+    "auto_match_rate_sales": 90.54,
+    "auto_precision": 99.44,
+    "wrong_auto_matches": 3,
+    "wrong_auto_rate": 0.45,
+    "sent_to_merchant": 19.34,
+    "queue_top3_recall": 94.64,
+    "udhaar_suggestion_accuracy": 100.0,
+    "stray_auto_matched": 0,
+    "uncaptured_alerts": 39,
+    "uncaptured_auto_matched": 2,
+    "duplicates_sent": 51,
+    "duplicates_ignored_pct": 100.0,
+    "alerts_posted_more_than_once": 0,
+    "by_ref": {
+      "with_ref": {
+        "n": 250,
+        "auto_rate": 99.6,
+        "precision": 99.6,
+        "wrong_auto": 1
+      },
+      "without_ref": {
+        "n": 342,
+        "auto_rate": 83.92,
+        "precision": 100.0,
+        "wrong_auto": 0
+      }
+    },
+    "by_tier": {
+      "2": 300,
+      "1": 238
+    },
+    "seconds": 59.5
+  }
+}

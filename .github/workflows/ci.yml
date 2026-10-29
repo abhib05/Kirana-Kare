@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: kk
+          POSTGRES_PASSWORD: kk
+          POSTGRES_DB: kirana_test
+        ports: ["5433:5432"]
+        options: >-
+          --health-cmd "pg_isready -U kk -d kirana_test"
+          --health-interval 3s --health-timeout 3s --health-retries 20
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      TEST_DATABASE_URL: postgresql+psycopg://kk:kk@localhost:5433/kirana_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync --frozen
+      - name: Lint
+        run: uv run ruff check .
+      - name: Type-check
+        run: uv run mypy app
+      - name: Tests
+        run: uv run pytest --cov=app --cov-report=term --cov-report=xml
+      - name: Coverage gate on the core (>= 90%)
+        run: >-
+          uv run coverage report --fail-under=90
+          --include="app/reconciliation/*,app/ledger/*,app/alerts/*,app/extraction/schemas.py"
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npx vitest run
+      - run: npm run build

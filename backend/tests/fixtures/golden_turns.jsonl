@@ -1,0 +1,40 @@
+{"id": "g01", "text": "do kilo atta aur ek packet doodh", "items": [["Atta", "2"], ["Milk", "1"]], "payment_mode": "unknown", "customer": null, "transactional": true}
+{"id": "g02", "text": "aadha kilo cheeni", "items": [["Sugar", "0.5"]], "payment_mode": "unknown", "customer": null, "transactional": true}
+{"id": "g03", "text": "teen maggi aur do parle g dena", "items": [["Maggi Noodles", "3"], ["Parle-G Biscuits", "2"]], "payment_mode": "unknown", "customer": null, "transactional": true}
+{"id": "g04", "text": "ek litre tel aur ek kilo toor dal", "items": [["Sunflower Oil", "1"], ["Toor Dal", "1"]], "payment_mode": "unknown", "customer": null, "transactional": true}
+{"id": "g05", "text": "bas, kitna hua? gpay karta hoon", "items": [], "payment_mode": "upi", "customer": null, "transactional": true}
+{"id": "g06", "text": "Ramesh bhaiya ke khate mein likh do", "items": [], "payment_mode": "udhaar", "customer": "Ramesh Kumar", "transactional": true}
+{"id": "g07", "text": "rendu kilo biyyam, oka litre nune", "items": [["Sona Masoori Rice", "2"], ["Sunflower Oil", "1"]], "payment_mode": "unknown", "customer": null, "transactional": true}
+{"id": "g08", "text": "500 gram pyaaz aur 250 gram tamatar", "items": [["Onion", "0.5"], ["Tomato", "0.25"]], "payment_mode": "unknown", "customer": null, "transactional": true}
+{"id": "g09", "text": "ek dozen ande", "items": [["Eggs", "1"]], "payment_mode": "unknown", "customer": null, "transactional": true}
+{"id": "g10", "text": "do sabun aur ek colgate", "items": [["Bath Soap", "2"], ["Toothpaste", "1"]], "payment_mode": "unknown", "customer": null, "transactional": true}
+{"id": "g11", "text": "cash de raha hoon, bas", "items": [], "payment_mode": "cash", "customer": null, "transactional": true}
+{"id": "g12", "text": "aaj bahut garmi hai na", "items": [], "payment_mode": "unknown", "customer": null, "transactional": false}
+{"id": "g13", "text": "chai patti ka ek packet aur ek kilo gud", "items": [["Tea Powder", "1"], ["Jaggery", "1"]], "payment_mode": "unknown", "customer": null, "transactional": true}
+{"id": "g14", "text": "do thums up aur teen lays", "items": [["Cold Drink 750ml", "2"], ["Chips", "3"]], "payment_mode": "unknown", "customer": null, "transactional": true}
+{"id": "g15", "text": "maggi nahi chahiye", "items": [["Maggi Noodles", "1"]], "payment_mode": "unknown", "customer": null, "transactional": true}
+{"id": "g16", "text": "ek kilo sooji aur aadha kilo besan", "items": [["Rava", "1"], ["Besan", "0.5"]], "payment_mode": "unknown", "customer": null, "transactional": true}
+{"id": "g17", "text": "phonepe se bhej diya", "items": [], "payment_mode": "upi", "customer": null, "transactional": true}
+{"id": "g18", "text": "Lakshmi amma ka udhaar mein daal do", "items": [], "payment_mode": "udhaar", "customer": "Lakshmi Devi", "transactional": true}
+{"id": "g19", "text": "Suresh anna 500 rupaye jama kar rahe hain", "items": [], "payment_mode": "cash", "customer": "Suresh Reddy", "transactional": true}
+{"id": "g20", "text": "teen kilo aloo, do kilo pyaz", "items": [["Potato", "3"], ["Onion", "2"]], "payment_mode": "unknown", "customer": null, "transactional": true}
+{"id": "g21", "text": "ek packet namak aur ek machis", "items": [["Salt", "1"], ["Matchbox", "1"]], "payment_mode": "unknown", "customer": null, "transactional": true}
+{"id": "g22", "text": "do kilo chawal 120 rupaye", "items": [["Sona Masoori Rice", "2"]], "payment_mode": "unknown", "customer": null, "transactional": true}
+{"id": "g23", "text": "ek bread aur do dahi, paytm", "items": [["Bread", "1"], ["Curd", "2"]], "payment_mode": "upi", "customer": null, "transactional": true}
+{"id": "g24", "text": "haan ji, theek hai", "items": [], "payment_mode": "unknown", "customer": null, "transactional": false}
+{"id": "g25", "text": "ek kilo surf excel", "items": [["Detergent Powder", "1"]], "payment_mode": "unknown", "customer": null, "transactional": true}
+{"id": "g26", "text": "do vim bar", "items": [["Dishwash Bar", "2"]], "payment_mode": "unknown", "customer": null, "transactional": true}
+{"id": "g27", "text": "kitne ka hai atta?", "items": [], "payment_mode": "unknown", "customer": null, "transactional": false}
+{"id": "g28", "text": "agarbatti ek packet aur ek kilo poha", "items": [["Agarbatti", "1"], ["Poha", "1"]], "payment_mode": "unknown", "customer": null, "transactional": true}
+{"id": "g29", "text": "okati kilo chakkera", "items": [["Sugar", "1"]], "payment_mode": "unknown", "customer": null, "transactional": true}
+{"id": "g30", "text": "irfan bhai ke khate mein", "items": [], "payment_mode": "udhaar", "customer": "Mohammed Irfan", "transactional": true}
+{"id": "g31", "text": "doodh do packet, dahi ek", "items": [["Milk", "2"], ["Curd", "1"]], "payment_mode": "unknown", "customer": null, "transactional": true}
+{"id": "g32", "text": "chips teen", "items": [["Chips", "3"]], "payment_mode": "unknown", "customer": null, "transactional": true}
+{"id": "g33", "text": "QR scan kar lo", "items": [], "payment_mode": "upi", "customer": null, "transactional": true}
+{"id": "g34", "text": "aata do kilo aur chini ek kilo", "items": [["Atta", "2"], ["Sugar", "1"]], "payment_mode": "unknown", "customer": null, "transactional": true}
+{"id": "g35", "text": "magi teen packet", "items": [["Maggi Noodles", "3"]], "payment_mode": "unknown", "customer": null, "transactional": true}
+{"id": "g36", "text": "ek kilo toor daal", "items": [["Toor Dal", "1"]], "payment_mode": "unknown", "customer": null, "transactional": true}
+{"id": "g37", "text": "venkat anna ka hisaab baad mein", "items": [], "payment_mode": "udhaar", "customer": "Venkat Rao", "transactional": true}
+{"id": "g38", "text": "paanch parle g aur ek kilo jaggery", "items": [["Parle-G Biscuits", "5"], ["Jaggery", "1"]], "payment_mode": "unknown", "customer": null, "transactional": true}
+{"id": "g39", "text": "ek candle packet aur ek matchbox", "items": [["Candles", "1"], ["Matchbox", "1"]], "payment_mode": "unknown", "customer": null, "transactional": true}
+{"id": "g40", "text": "nakad dunga, total bolo", "items": [], "payment_mode": "cash", "customer": null, "transactional": true}

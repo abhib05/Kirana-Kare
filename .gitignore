@@ -27,3 +27,7 @@ Thumbs.db
 .vscode/
 .idea/
 *.tsbuildinfo
+
+# eval artefacts that are regenerated from a seed
+eval/scenarios*.json
+eval/run_eval.log

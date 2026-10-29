@@ -1,5 +1,13 @@
 # Changelog
 
+## Phase 8 — Evaluation & hardening
+- `eval/generate_scenarios.py`: seeded synthetic shop-days with ground truth — rush hours, 0–8 min alert delays (6% early), refs echoed 40% of the time, bank/VPA/alias/initial payer names, same-amount twins, unpaid baskets, open cash baskets, UPI udhaar repayments, stray credits (half at common basket amounts), ~6% duplicate deliveries, and 7% of UPI sales never captured by the listener.
+- `eval/run_eval.py`: replays scenarios through the production `ingest_alert` / `reconcile_alert` / `rereconcile_pending` on a dedicated `kirana_eval` database; 15-config grid (threshold × window) on the dev split, held-out scored with the dev pick and with the defaults; writes `eval/REPORT.md` + `eval/results.json` (`--report-only` rebuilds the report).
+- Results (held-out, defaults 0.80 / ±10 min): 80.66% of 667 alerts auto-matched (90.54% of alerts for a captured sale) at 99.44% precision, 3 wrong; 100% of 51 duplicates ignored; no alert posted twice. The dev-tuned 0.70 / ±15 fell to 98.9% precision on held-out, so the defaults are kept.
+- A first run had 0 wrong auto-matches at every setting because nothing in the scenarios could cause one; the missed-sale and common-amount stray cases were added before reporting.
+- `eval/run_extraction_eval.py` + 40 hand-labelled code-mixed turns: rule baseline item P/R 97.7% / 95.5%, payment mode 100%, customer 100%. The eval found a rules bug (honorific taken as the customer name in "irfan bhai ke khate mein"), fixed with a regression test. `eval/transcribe_clips.py` streams recorded WAV clips through the same Muse session code for the end-to-end number.
+- CI workflow (ruff, mypy, pytest with a 90% gate on the core packages, Vitest, frontend build); `docs/ARCHITECTURE.md`; decisions D4–D11.
+
 ## Phase 7 — Inventory, restock & reminders
 - `close_basket` now calls `inventory.on_basket_closed` directly, so the sale, its ledger entry, the stock decrement (row-locked products) and any restock draft commit in one transaction. Lines in a unit that couldn't be converted don't touch stock; stock may go negative (that means the count was wrong, not that the sale didn't happen).
 - `app/restock/drafts.py`: one open draft per vendor; suggested qty = ⌈2 × reorder − stock⌉ (multiplier configurable, minimum 1); bilingual message; `wa.me` link. New low items update the open draft; quantities the merchant edited are kept; items in a draft marked *sent* in the last 2 days count as on order. Edit / sent / dismiss endpoints, plus `POST /api/products/{id}/receive` for incoming stock.
