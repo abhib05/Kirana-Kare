@@ -1,5 +1,11 @@
 # Changelog
 
+## Phase 9 — Polish
+- README: problem, eval numbers, 5-minute quick start, demo script, architecture, design choices, tests, privacy, limitations, future work.
+- Clean-clone check: `git clone` → `cp .env.example .env` → `docker compose up --build` → typed sale → UPI awaiting with ref → alert → ledger + stock update, all through the frontend proxy. It found a first-run bug: `.env.example` had inline comments, which Compose reads as part of the value, so `MODEL_API_KEY` became the comment text and every turn was rejected with an LLM auth error. Comments now sit on their own lines.
+- GitHub Actions CI is green on `main`.
+- Not done: demo GIF (needs a real voice session to be worth showing) and the optional Cloud Run deploy.
+
 ## Phase 8 — Evaluation & hardening
 - `eval/generate_scenarios.py`: seeded synthetic shop-days with ground truth — rush hours, 0–8 min alert delays (6% early), refs echoed 40% of the time, bank/VPA/alias/initial payer names, same-amount twins, unpaid baskets, open cash baskets, UPI udhaar repayments, stray credits (half at common basket amounts), ~6% duplicate deliveries, and 7% of UPI sales never captured by the listener.
 - `eval/run_eval.py`: replays scenarios through the production `ingest_alert` / `reconcile_alert` / `rereconcile_pending` on a dedicated `kirana_eval` database; 15-config grid (threshold × window) on the dev split, held-out scored with the dev pick and with the defaults; writes `eval/REPORT.md` + `eval/results.json` (`--report-only` rebuilds the report).
